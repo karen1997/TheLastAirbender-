@@ -83,32 +83,20 @@ class PatientHandler(webapp2.RequestHandler):
                             patientLocation = location)
         user.put()
 
-class ResultsHandler(webapp2.RequestHandler):
-    def get(self):
-        template = jinja_environment.get_template('templates/results.html')
-        self.response.write(template.render())
-
-    def post(self):
-
-        template = jinja_environment.get_template('templates/results.html')
-        results = {'name' : doctorName,
-                    'language' : doctorLanguage,
-                    'location': doctorLocation
-                   }
-
-        self.response.write(template.render(results))
-
-        currUser = users.get_current_user()
-        currEmail = currUser.email()
-
-        qry = DoctorUser.query(DoctorUser.doctorLanguage == PatientUser.patientLanguage , DoctorUser.doctorLocation == PatientUser.patientLanguage)
-        logging.info(qry)
-        # def match():
-        #     for doctor in DoctorUser:
-        #         if doctorLanguage == currEmail.patientLanguage and doctorLocation == currEmail.patientLocation:
-        #             return results
-        #         else:
-        #             return "No Search Results"
+# class ResultsHandler(webapp2.RequestHandler):
+#     def get(self):
+#         template = jinja_environment.get_template('templates/results.html')
+#         self.response.write(template.render())
+#
+#     def post(self):
+#
+#         template = jinja_environment.get_template('templates/results.html')
+#         results = {'name' : ,
+#                     'language' : ,
+#                     'location':
+#                    }
+#
+#         self.response.write(template.render(results))
 
 class DocloginHandler(webapp2.RequestHandler):
     def get(self):
@@ -124,7 +112,7 @@ app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/doctoraccount', DoctorHandler),
     ('/patientaccount', PatientHandler),
-    ('/results', ResultsHandler),
+    # ('/results', ResultsHandler),
     ('/doctorlogin', DocloginHandler),
     ('/patientlogin', PatloginHandler),
 ], debug=True)

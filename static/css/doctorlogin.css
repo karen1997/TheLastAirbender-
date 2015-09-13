@@ -1,0 +1,28 @@
+*{
+  background-color: #E3E6E9;
+}
+h1{
+  font-family: 'caviar dreams';
+  color: #313131;
+  font-size: 70px;
+  text-align: center;
+}
+p{
+  font-size: 20px;
+  font-family: 'oranienbaum';
+  text-align: center;
+}
+#container{
+  text-align: center;
+  font-family: 'oranienbaum';
+  height: 100%;
+  width: 100%;
+}
+
+a{
+  text-decoration: none;
+  padding-left: 580px;
+}
+a:hover{
+  color:yellow;
+}

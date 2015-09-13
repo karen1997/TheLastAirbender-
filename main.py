@@ -83,20 +83,12 @@ class PatientHandler(webapp2.RequestHandler):
                             patientLocation = location)
         user.put()
 
-# class ResultsHandler(webapp2.RequestHandler):
-#     def get(self):
-#         template = jinja_environment.get_template('templates/results.html')
-#         self.response.write(template.render())
-#
-#     def post(self):
-#
-#         template = jinja_environment.get_template('templates/results.html')
-#         results = {'name' : ,
-#                     'language' : ,
-#                     'location':
-#                    }
-#
-#         self.response.write(template.render(results))
+class ResultsHandler(webapp2.RequestHandler):
+    def get(self):
+        template = jinja_environment.get_template('templates/results.html')
+        self.response.write(template.render())
+
+
 
 class DocloginHandler(webapp2.RequestHandler):
     def get(self):

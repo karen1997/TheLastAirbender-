@@ -19,8 +19,23 @@ import jinja2
 import logging
 import os
 from google.appengine.api import users
+from google.appengine.ext import ndb
+import json
 
 jinja_environment = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
+
+#stores data for the Doctors
+class DoctorUser(ndb.Model):
+    doctorName = ndb.StringProperty()
+    doctorLanguage = ndb.StringProperty(repeated=True)
+    doctorLocation = ndb.StringProperty()
+
+#stores data for the Patients
+class PatientUser(ndb.Model):
+    patientName = ndb.StringProperty()
+    patientLanguage = ndb.StringProperty(repeated=True)
+    patientLocation = ndb.StringProperty()
+
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
@@ -32,10 +47,68 @@ class DoctorHandler(webapp2.RequestHandler):
         template = jinja_environment.get_template('templates/doctoraccount.html')
         self.response.write(template.render())
 
+    #retrieves User information from email login and stores users input
+    def post(self):
+        currUser = users.get_current_user()
+        currEmail = currUser.email()
+        name = self.request.get('name')
+        languageList = []
+        language = self.request.get('language')
+        languageList = language.split()
+        logging.info(languageList)
+        location = self.request.get('location')
+        user = DoctorUser (id = currEmail,
+                           doctorName = name,
+                           doctorLanguage = languageList,
+                           doctorLocation = location)
+        user.put()
+
+
 class PatientHandler(webapp2.RequestHandler):
     def get(self):
         template = jinja_environment.get_template('templates/patientaccount.html')
         self.response.write(template.render())
+
+    def post(self):
+        currUser = users.get_current_user()
+        currEmail = currUser.email()
+        name = self.request.get('name1')
+        languageList = []
+        language = self.request.get('language1')
+        languageList = language.split()
+        location = self.request.get('location1')
+        user = PatientUser (id = currEmail,
+                            patientName = name,
+                            patientLanguage = languageList,
+                            patientLocation = location)
+        user.put()
+
+class ResultsHandler(webapp2.RequestHandler):
+    def get(self):
+        template = jinja_environment.get_template('templates/results.html')
+        self.response.write(template.render())
+
+    def post(self):
+
+        template = jinja_environment.get_template('templates/results.html')
+        results = {'name' : doctorName,
+                    'language' : doctorLanguage,
+                    'location': doctorLocation
+                   }
+
+        self.response.write(template.render(results))
+
+        currUser = users.get_current_user()
+        currEmail = currUser.email()
+
+        qry = DoctorUser.query(DoctorUser.doctorLanguage == PatientUser.patientLanguage , DoctorUser.doctorLocation == PatientUser.patientLanguage)
+        logging.info(qry)
+        # def match():
+        #     for doctor in DoctorUser:
+        #         if doctorLanguage == currEmail.patientLanguage and doctorLocation == currEmail.patientLocation:
+        #             return results
+        #         else:
+        #             return "No Search Results"
 
 class DocloginHandler(webapp2.RequestHandler):
     def get(self):
@@ -51,6 +124,7 @@ app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/doctoraccount', DoctorHandler),
     ('/patientaccount', PatientHandler),
+    ('/results', ResultsHandler),
     ('/doctorlogin', DocloginHandler),
     ('/patientlogin', PatloginHandler),
 ], debug=True)

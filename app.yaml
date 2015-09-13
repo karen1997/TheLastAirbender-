@@ -8,12 +8,13 @@ handlers:
 
 - url: /static/*
   static_dir: static
-  
+
 - url: /favicon\.ico
   static_files: favicon.ico
   upload: favicon\.ico
 
 - url: .*
+  login: required
   script: main.app
 
 libraries:
